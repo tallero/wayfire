@@ -25,7 +25,7 @@ struct singleton_data_t : public custom_data_t
  * which automatically creates a single instance of the specified class, and
  * destroys it when the plugin is unloaded
  */
-template<class Plugin>
+template<class Plugin, bool unloadable = true>
 class singleton_plugin_t : public plugin_interface_t
 {
     using CustomDataT = detail::singleton_data_t<Plugin>;
@@ -45,6 +45,8 @@ class singleton_plugin_t : public plugin_interface_t
         if (instance->unref() <= 0)
             wf::get_core().erase_data<CustomDataT>();
     }
+
+    bool is_unloadable() { return unloadable; }
 
   protected:
     /* Get the enclosed plugin */

@@ -14,4 +14,4 @@ class wayfire_autostart
     }
 };
 
-DECLARE_WAYFIRE_PLUGIN(wf::singleton_plugin_t<wayfire_autostart>);
+DECLARE_WAYFIRE_PLUGIN((wf::singleton_plugin_t<wayfire_autostart, false>));
