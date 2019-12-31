@@ -29,7 +29,7 @@ libinput       = dependency('libinput', version: '>=1.7.0')
 pixman         = dependency('pixman-1')
 threads        = dependency('threads')
 xkbcommon      = dependency('xkbcommon')
-wlroots        = dependency('wlroots', version: ['>=0.8.0', '<0.9.0'], fallback: ['wlroots', 'wlroots'])
+wlroots        = dependency('wlroots', version: ['>=0.9.0', '<0.10.0'], fallback: ['wlroots', 'wlroots'])
 wfconfig       = dependency('wf-config', version: '>=0.3', fallback: ['wf-config', 'wfconfig'])
 
 needs_libinotify = ['freebsd', 'dragonfly'].contains(host_machine.system())
