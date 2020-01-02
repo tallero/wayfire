@@ -513,7 +513,11 @@ namespace wf
                 if (handle->current_mode->width == mode.width &&
                     handle->current_mode->height == mode.height &&
                     handle->current_mode->refresh == mode.refresh)
+                {
+                    /* Commit the enabling of the output */
+                    wlr_output_commit(handle);
                     return;
+                }
             }
 
             refresh_custom_modes();
@@ -530,7 +534,7 @@ namespace wf
                     mode.refresh);
             }
 
-            return;
+            wlr_output_commit(handle);
         }
 
         /* Mirroring implementation */
@@ -587,6 +591,16 @@ namespace wf
             wlr_dmabuf_attributes_finish(&attributes);
         }
 
+        void set_enabled(bool enabled)
+        {
+            if (wlr_output_is_noop(handle))
+                return;
+
+            wlr_output_enable(handle, enabled);
+            if (!enabled)
+                wlr_output_commit(handle);
+        }
+
         void setup_mirror()
         {
             /* Check if we can mirror */
@@ -608,8 +622,7 @@ namespace wf
             {
                 /* If we mirror from a DPMS or an OFF output, we should turn
                  * off this output as well */
-                wlr_output_enable(handle, false);
-
+                set_enabled(false);
                 log_info("%s: Cannot mirror from output %s. Disabling output.",
                     handle->name, current_state.mirror_from.c_str());
                 return;
@@ -650,7 +663,7 @@ namespace wf
             if (state.source & OUTPUT_IMAGE_SOURCE_NONE)
             {
                 /* DPMS or OFF */
-                wlr_output_enable(handle, false);
+                set_enabled(false);
                 if (state.source == OUTPUT_IMAGE_SOURCE_NONE)
                 {
                     /* OFF */
@@ -661,7 +674,7 @@ namespace wf
             else
             {
                 /* SELF or MIRROR */
-                wlr_output_enable(handle, true);
+                set_enabled(true);
             }
 
             apply_mode(state.mode);
@@ -672,6 +685,8 @@ namespace wf
 
                 if (handle->scale != state.scale)
                     wlr_output_set_scale(handle, state.scale);
+
+                wlr_output_commit(handle);
 
                 ensure_wayfire_output();
                 output->render->damage_whole();
@@ -729,6 +744,7 @@ namespace wf
             get_core().connect_signal("shutdown", &on_shutdown);
 
             noop_backend = wlr_noop_backend_create(get_core().display);
+            wlr_backend_start(noop_backend);
             /* The noop output will be typically destroyed on the first
              * plugged monitor, however we need to create it here so that we
              * support booting with 0 monitors */

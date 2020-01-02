@@ -530,7 +530,10 @@ class wf::render_manager::impl
 
         bool needs_swap;
         if (!output_damage->make_current(needs_swap))
+        {
+            wlr_output_rollback(output->handle);
             return;
+        }
 
         if (!needs_swap && !constant_redraw_counter)
         {
@@ -538,6 +541,7 @@ class wf::render_manager::impl
              * and no plugin wants custom redrawing - we can just skip the whole
              * repaint */
             post_paint();
+            wlr_output_rollback(output->handle);
             return;
         }
 
