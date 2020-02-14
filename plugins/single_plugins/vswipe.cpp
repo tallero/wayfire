@@ -11,6 +11,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <wayfire/util/duration.hpp>
+#include "view-change-viewport-signal.hpp"
 
 #include <cmath>
 #include <utility>
@@ -19,6 +20,9 @@
 class vswipe : public wf::plugin_interface_t
 {
     private:
+        wf::activator_callback callback_left, callback_right, callback_up, callback_down;
+        wf::activator_callback callback_win_left, callback_win_right, callback_win_up, callback_win_down;
+
         struct {
             /* When the workspace is set to (-1, -1), means no such workspace */
             wf::workspace_stream_t prev, curr, next;
@@ -76,6 +80,98 @@ class vswipe : public wf::plugin_interface_t
         wf::get_core().connect_signal("pointer_swipe_update", &on_swipe_update);
         wf::get_core().connect_signal("pointer_swipe_end", &on_swipe_end);
         renderer = [=] (const wf::framebuffer_t& buffer) { render(buffer); };
+
+        callback_left  = [=] (wf::activator_source_t, uint32_t) { return add_direction(-1,  0); };
+        callback_right = [=] (wf::activator_source_t, uint32_t) { return add_direction( 1,  0); };
+        callback_up    = [=] (wf::activator_source_t, uint32_t) { return add_direction( 0, -1); };
+        callback_down  = [=] (wf::activator_source_t, uint32_t) { return add_direction( 0,  1); };
+
+        callback_win_left  = [=] (wf::activator_source_t, uint32_t) { return add_direction(-1,  0, get_top_view()); };
+        callback_win_right = [=] (wf::activator_source_t, uint32_t) { return add_direction( 1,  0, get_top_view()); };
+        callback_win_up    = [=] (wf::activator_source_t, uint32_t) { return add_direction( 0, -1, get_top_view()); };
+        callback_win_down  = [=] (wf::activator_source_t, uint32_t) { return add_direction( 0,  1, get_top_view()); };
+
+        wf::option_wrapper_t<wf::activatorbinding_t> binding_left{"vswipe/binding_left"};
+        wf::option_wrapper_t<wf::activatorbinding_t> binding_right{"vswipe/binding_right"};
+        wf::option_wrapper_t<wf::activatorbinding_t> binding_up{"vswipe/binding_up"};
+        wf::option_wrapper_t<wf::activatorbinding_t> binding_down{"vswipe/binding_down"};
+
+        wf::option_wrapper_t<wf::activatorbinding_t> binding_win_left{"vswipe/binding_win_left"};
+        wf::option_wrapper_t<wf::activatorbinding_t> binding_win_right{"vswipe/binding_win_right"};
+        wf::option_wrapper_t<wf::activatorbinding_t> binding_win_up{"vswipe/binding_win_up"};
+        wf::option_wrapper_t<wf::activatorbinding_t> binding_win_down{"vswipe/binding_win_down"};
+
+        output->add_activator(binding_left,  &callback_left);
+        output->add_activator(binding_right, &callback_right);
+        output->add_activator(binding_up,    &callback_up);
+        output->add_activator(binding_down,  &callback_down);
+
+        output->add_activator(binding_win_left,  &callback_win_left);
+        output->add_activator(binding_win_right, &callback_win_right);
+        output->add_activator(binding_win_up,    &callback_win_up);
+        output->add_activator(binding_win_down,  &callback_win_down);
+    }
+
+    wayfire_view get_top_view()
+    {
+        auto ws = output->workspace->get_current_workspace();
+        auto views = output->workspace->get_views_on_workspace(ws,
+            wf::LAYER_WORKSPACE | wf::LAYER_FULLSCREEN, true);
+
+        return views.empty() ? nullptr : views[0];
+    }
+
+    bool add_direction(int x, int y, wayfire_view view = nullptr)
+    {
+        if (!x && !y)
+            return false;
+
+        if (state.animating)
+            return false;
+
+        if (view && view->role != wf::VIEW_ROLE_TOPLEVEL)
+            view = nullptr;
+
+        swipe_begin(fingers);
+        swipe_update(x * -100, y * -100);
+
+        if (view)
+            slide_view_done(x, y, view);
+
+        on_swipe_end(nullptr);
+
+        return true;
+    }
+
+    void slide_view_done(int x, int y, wayfire_view view)
+    {
+        auto grid = output->workspace->get_workspace_grid_size();
+        auto cws = output->workspace->get_current_workspace();
+        auto old_ws = cws;
+
+        cws.x += x;
+        cws.y += y;
+
+        if (cws.x < 0 || cws.x > grid.width - 1 ||
+            cws.y < 0 || cws.y > grid.height - 1)
+        {
+            return;
+        }
+
+        auto output_g = output->get_relative_geometry();
+
+        auto wm = view->get_wm_geometry();
+        view->move(wm.x + x * output_g.width,
+            wm.y + y * output_g.height);
+
+        output->focus_view(view);
+        output->workspace->bring_to_front(view);
+
+        view_change_viewport_signal data;
+        data.view = view;
+        data.from = old_ws;
+        data.to = cws;
+        output->emit_signal("view-change-viewport", &data);
     }
 
     /**
@@ -156,8 +252,7 @@ class vswipe : public wf::plugin_interface_t
             output->render->workspace_stream_update(s);
     }
 
-    template<class wlr_event> using event = wf::input_event_signal<wlr_event>;
-    wf::signal_callback_t on_swipe_begin = [=] (wf::signal_data_t *data)
+    void swipe_begin(int num_fingers)
     {
         if (!enable_horizontal && !enable_vertical)
             return;
@@ -165,9 +260,7 @@ class vswipe : public wf::plugin_interface_t
         if (output->is_plugin_active(grab_interface->name))
             return;
 
-        auto ev = static_cast<
-            event<wlr_event_pointer_swipe_begin>*> (data)->event;
-        if (static_cast<int>(ev->fingers) != fingers)
+        if (num_fingers != fingers)
             return;
 
         // Plugins are per output, swipes are global, so we need to handle
@@ -200,6 +293,14 @@ class vswipe : public wf::plugin_interface_t
         streams.prev.ws = {-1, -1};
         streams.next.ws = {-1, -1};
         streams.curr.ws = wf::point_t {ws.x, ws.y};
+    }
+
+    template<class wlr_event> using event = wf::input_event_signal<wlr_event>;
+    wf::signal_callback_t on_swipe_begin = [=] (wf::signal_data_t *data)
+    {
+        auto ev = static_cast<
+            event<wlr_event_pointer_swipe_begin>*> (data)->event;
+        swipe_begin(ev->fingers);
     };
 
     void start_swipe(swipe_direction_t direction)
@@ -235,13 +336,10 @@ class vswipe : public wf::plugin_interface_t
         }
     }
 
-    wf::signal_callback_t on_swipe_update = [&] (wf::signal_data_t *data)
+    void swipe_update(double dx, double dy)
     {
         if (!state.swiping)
             return;
-
-        auto ev = static_cast<
-            event<wlr_event_pointer_swipe_update>*> (data)->event;
 
         if (state.direction == UNKNOWN)
         {
@@ -250,9 +348,9 @@ class vswipe : public wf::plugin_interface_t
             // XXX: how to determine this??
             static constexpr double initial_direction_threshold = 0.05;
             state.initial_deltas.x +=
-                std::abs(ev->dx) / speed_factor;
+                std::abs(dx) / speed_factor;
             state.initial_deltas.y +=
-                std::abs(ev->dy) / speed_factor;
+                std::abs(dy) / speed_factor;
 
             bool horizontal =
                 state.initial_deltas.x > initial_direction_threshold;
@@ -282,19 +380,26 @@ class vswipe : public wf::plugin_interface_t
         double current_delta_processed;
         if (state.direction == HORIZONTAL)
         {
-            current_delta_processed = vswipe_process_delta(ev->dx,
+            current_delta_processed = vswipe_process_delta(dx,
                 smooth_delta, state.vx, state.vw, cap, fac);
-            state.delta_last = ev->dx;
+            state.delta_last = dx;
         } else
         {
-            current_delta_processed = vswipe_process_delta(ev->dy,
+            current_delta_processed = vswipe_process_delta(dy,
                 smooth_delta, state.vy, state.vh, cap, fac);
-            state.delta_last = ev->dy;
+            state.delta_last = dy;
         }
 
         double new_delta_end = smooth_delta.end + current_delta_processed;
         double new_delta_start = smooth_transition ?  smooth_delta : new_delta_end;
         smooth_delta.animate(new_delta_start, new_delta_end);
+    }
+
+    wf::signal_callback_t on_swipe_update = [&] (wf::signal_data_t *data)
+    {
+        auto ev = static_cast<
+            event<wlr_event_pointer_swipe_update>*> (data)->event;
+        swipe_update(ev->dx, ev->dy);
     };
 
     wf::signal_callback_t on_swipe_end = [=] (wf::signal_data_t *data)
@@ -360,6 +465,16 @@ class vswipe : public wf::plugin_interface_t
     {
         if (state.swiping)
             finalize_and_exit();
+
+        output->rem_binding(&callback_left);
+        output->rem_binding(&callback_right);
+        output->rem_binding(&callback_up);
+        output->rem_binding(&callback_down);
+
+        output->rem_binding(&callback_win_left);
+        output->rem_binding(&callback_win_right);
+        output->rem_binding(&callback_win_up);
+        output->rem_binding(&callback_win_down);
 
         OpenGL::render_begin();
         streams.prev.buffer.release();
