@@ -7,7 +7,7 @@
 		<option name="toggle" type="activator">
 			<_short>Toggle</_short>
 			<_long>Inverts the colors of the whole output with the specified activator.</_long>
-			<default>&lt;super&gt; KEY_I</default>
+			<default>none</default>
 		</option>
 	</plugin>
 </wayfire>

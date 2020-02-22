@@ -8,12 +8,12 @@
 		<option name="next_view" type="key">
 			<_short>Next view</_short>
 			<_long>Switches to the next view with the specified key.</_long>
-			<default>&lt;super&gt; KEY_TAB</default>
+			<default>none</default>
 		</option>
 		<option name="prev_view" type="key">
 			<_short>Previous view</_short>
 			<_long>Switches to the previous view with the specified key.</_long>
-			<default>&lt;super&gt; &lt;shift&gt; KEY_TAB</default>
+			<default>none</default>
 		</option>
 		<!-- Gestures -->
 		<option name="gesture_toggle" type="gesture">
