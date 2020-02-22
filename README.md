@@ -1,58 +1,115 @@
-# Wayfire
+# [Wayfire]
 
-# Introduction
+[Wayfire]: https://wayfire.org
 
-[![Join the chat at https://gitter.im/Wayfire-WM/Lobby](https://badges.gitter.im/Wayfire-WM/Lobby.svg)](https://gitter.im/Wayfire-WM/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) or join #wayfire at freenode.net
+![Version](https://img.shields.io/badge/version-alpha-important)
+[![IRC](https://img.shields.io/badge/irc-%23wayfire-informational)](https://webchat.freenode.net/#wayfire)
 
-Wayfire is a wayland compositor based on wlroots. It aims to create a customizable, extendable and lightweight environment without sacrificing its appearance. If you want to gain a better impression at what it can do, see the demo videos on youtube: [link](https://www.youtube.com/playlist?list=PLb7YRKEhWEBUIoT-a29UoJW9mhfzjpNle)
+###### [Get started] | [Manual] | [Configuration]
 
-# Build and install
+[Get started]: https://github.com/WayfireWM/wayfire/wiki/Tutorial
+[Manual]: https://github.com/WayfireWM/wayfire/wiki/General
+[Configuration]: https://github.com/WayfireWM/wayfire/wiki/Configuration
 
-To build wayfire, you'll need `glm`, `wf-config`(built as a submodule by default) and `wlroots` + its build dependencies. When ready, simply clone this repo, compile and install:
+Wayfire is a 3D [Wayland] compositor, inspired by [Compiz] and based on [wlroots].
 
+It aims to create a customizable, extendable and lightweight environment without sacrificing its appearance.
+
+[![Wayfire demos](https://img.youtube.com/vi_webp/2PtNzxDsxYM/maxresdefault.webp)](https://youtube.com/playlist?list=PLb7YRKEhWEBUIoT-a29UoJW9mhfzjpNle "YouTube – Wayfire demos")
+[![YouTube Play Button](https://www.iconfinder.com/icons/317714/download/png/16)](https://youtube.com/playlist?list=PLb7YRKEhWEBUIoT-a29UoJW9mhfzjpNle) · [Wayfire demos](https://youtube.com/playlist?list=PLb7YRKEhWEBUIoT-a29UoJW9mhfzjpNle)
+
+[Wayland]: https://wayland.freedesktop.org
+[wlroots]: https://github.com/swaywm/wlroots
+[Compiz]: https://launchpad.net/compiz
+
+## Dependencies
+
+- [Cairo](https://cairographics.org)
+- [FreeType](https://freetype.org)
+- [GLM](https://glm.g-truc.net)
+- [libdrm](https://dri.freedesktop.org/wiki/DRM/)
+- [libevdev](https://freedesktop.org/wiki/Software/libevdev/)
+- [libGL](https://mesa3d.org)
+- [libinput](https://freedesktop.org/wiki/Software/libinput/)
+- [libjpeg](https://libjpeg-turbo.org)
+- [libpng](http://libpng.org/pub/png/libpng.html)
+- [libxkbcommon](https://xkbcommon.org)
+- [Pixman](https://pixman.org)
+- [pkg-config](https://freedesktop.org/wiki/Software/pkg-config/)
+- [Wayland](https://wayland.freedesktop.org)
+- [wayland-protocols](https://gitlab.freedesktop.org/wayland/wayland-protocols)
+- [wf-config](https://github.com/WayfireWM/wf-config)
+- [wlroots](https://github.com/swaywm/wlroots)
+
+## Installation
+
+``` sh
+meson build
+ninja -C build
+sudo ninja -C build install
 ```
-git clone https://github.com/WayfireWM/wayfire && cd wayfire
-meson build --prefix=/usr --buildtype=release
-ninja -C build && sudo ninja -C build install
+
+**Note**: `wf-config` and `wlroots` can be built as submodules, by specifying
+`-Duse_system_wfconfig=disabled` and `-Duse_system_wlroots=disabled` options to `meson`.
+This is the default if they are not present on your system.
+
+###### Arch Linux
+
+[wayfire] and [wayfire-git] are available in the [AUR].
+
+``` sh
+pacman -S wayfire
 ```
 
-If you want to build `wf-config` as a submodule of Wayfire, add `-Duse_system_wfconfig=disabled` to the second line.
+[AUR]: https://aur.archlinux.org
+[wayfire]: https://aur.archlinux.org/packages/wayfire/
+[wayfire-git]: https://aur.archlinux.org/packages/wayfire-git/
 
-If you want to build `wlroots` as a submodule of Wayfire, add `-Duse_system_wlroots=disabled` to the second line.
+###### Exherbo
 
-Note that **any** of `wf-config` and `wlroots` will be built as submodules if they are not already available and if you don't explicitly turn these submodules off.
-
-
-# Packaging status
-
-- [Fedora](https://apps.fedoraproject.org/packages/wayfire) (31+): `sudo dnf install wayfire`
-- [Void](https://github.com/void-linux/void-packages/blob/master/srcpkgs/wayfire/template): `doas xbps-install wayfire`
-- [FreeBSD](https://www.freshports.org/x11-wm/wayfire/): `doas pkg install wayfire`
-
-**Before running Wayfire, copy the default configuration file which is located in the root of the repository and place it in:**
+``` sh
+cave resolve -x wayfire
 ```
-cp wayfire.ini.default ~/.config/wayfire.ini
+
+###### Fedora
+
+``` sh
+dnf install wayfire
 ```
-It is also advisable to install https://github.com/WayfireWM/wf-shell in order to get a background and a panel. Just follow the instructions in the README of wf-shell. You may also want to visit the page on [external tools](https://github.com/WayfireWM/wayfire/wiki/External-tools).
 
-To start wayfire, just execute `wayfire` from a TTY. If you encounter any issues, please read [debug report guidelines](https://github.com/ammen99/wayfire/wiki/Debugging-problems) and open a bug in this repo. Or you can also write in gitter.
-# Project status
+###### FreeBSD
 
-**IMPORTANT**: Although many of the features one can expect from a WM are implemented, Wayfire should be considered as **(pre-)alpha** quality. In my setup it works just fine, but the project hasn't been extensively tested, so there are a lot of bugs to be expected and to be fixed. Bug reports are welcome!
+``` sh
+pkg install wayfire
+```
 
-Currently supported:
-1. Seamless integration of both native wayland & Xwayland clients
-2. Workspaces (or more like viewports if you are familiar with compiz)
-3. Configurable bindings (int many cases multiple bindings to the same action are supported)
-4. Configuration on-the-fly - changes made to the config file are applied immediately without restarting wayfire
-5. Various plugins: Desktop cube, Expo(live workspace previews), Grid(arrange floating windows in a grid), Auto snap at edges, and many others
-6. Shell panel with launchers, date, internet connection & battery support
-7. Basic touchscreen gestures - swipe, swipe-from-edge, pinch, all of them with >= 3 fingers. Can be configured to any command or activation/toggle binding. See the config for examples.
+###### NixOS
 
-See the list of issues to know what else is coming to wayfire. Also, don't hesitate to open a new one if you find any bugs or want some new feature.
+See [nixpkgs-wayland].
 
-# Contributing to the project
+[nixpkgs-wayland]: https://github.com/colemickens/nixpkgs-wayland
 
-There are many ways you can help, aside from developing - open bug reports, test features, add documentation, etc.
+###### Ubuntu
 
-If you want to write your own plugin, a general outline of how the plugin system works is here: [plugin architecture](https://github.com/ammen99/wayfire/wiki/Plugin-architecture). Unfortunately documentation always end up last in the TODO list, so information is very scarce. You can take a look at the simpler plugins(the simplest are `command` and `rotator`, around 50-60 loc each). I have also added documentations for many of the API functions in the headers(`src/api/*`). Don't hesitate to write in IRC (or gitter) if you have any questions.
+See the [build instructions][Ubuntu build instructions] from [@soreau].
+
+[@soreau]: https://github.com/soreau
+[Ubuntu build instructions]: http://blog.northfield.ws/wayfire/
+
+###### Void
+
+``` sh
+xbps-install -S wayfire
+```
+
+## Configuration
+
+Copy [`wayfire.ini`] to `~/.config/wayfire.ini`.
+Before running Wayfire, you may want to change the command to start a terminal.
+See the [Configuration] document for information on the options.
+
+[`wayfire.ini`]: wayfire.ini
+
+## Running
+
+Run [`wayfire`][Manual] from a TTY, or via a Wayland-compatible login manager.
