@@ -1,11 +1,13 @@
 <?xml version="1.0"?>
 <wayfire>
 	<plugin name="wrot">
-	<_short>Rotate Window</_short>
-	<category>Effects</category>
-	<option name="activate" type="button">
-		<_short>Activate</_short>
-		<default>&lt;alt&gt; BTN_RIGHT</default>
-	</option>
+		<_short>Window rotate</_short>
+		<_long>A plugin to rotate windows with the mouse.</_long>
+		<category>Effects</category>
+		<option name="activate" type="button">
+			<_short>Activate</_short>
+			<_long>Rotates the window with the specified button.</_long>
+			<default>&lt;alt&gt; BTN_RIGHT</default>
+		</option>
 	</plugin>
 </wayfire>

@@ -1,15 +1,18 @@
 <?xml version="1.0"?>
 <wayfire>
 	<plugin name="command">
-	<_short>Command</_short>
-	<category>General</category>
-	<group>
-	<_short>Commands</_short>
-	<option name="command" type="dynamic_list">
 		<_short>Command</_short>
-		<type>string</type>
-		<hint>file</hint>
-	</option>
-	</group>
+		<_long>A plugin to bind key combo (key, button, touch) to execute shell commands.</_long>
+		<category>General</category>
+		<group>
+			<_short>Commands</_short>
+			<_long>Sets the command bindings.</_long>
+			<option name="command" type="dynamic_list">
+				<_short>Command</_short>
+				<_long>Sets the command binding.</_long>
+				<type>string</type>
+				<hint>file</hint>
+			</option>
+		</group>
 	</plugin>
 </wayfire>

@@ -1,23 +1,28 @@
 <?xml version="1.0"?>
 <wayfire>
 	<plugin name="expo">
-	<_short>Expo</_short>
-	<category>Desktop</category>
-	<option name="toggle" type="activator">
-		<_short>Toggle</_short>
-		<default>&lt;super&gt; KEY_E</default>
-	</option>
-	<option name="duration" type="int">
-		<_short>Duration</_short>
-		<default>300</default>
-	</option>
-	<option name="background" type="color">
-		<_short>Background</_short>
-		<default>#0000</default>
-	</option>
-	<option name="offset" type="double">
-		<_short>Offset</_short>
-		<default>10</default>
-	</option>
+		<_short>Expo</_short>
+		<_long>A plugin to show an overview of all workspaces.</_long>
+		<category>Desktop</category>
+		<option name="toggle" type="activator">
+			<_short>Toggle</_short>
+			<_long>Shows an overview of all workspaces with the specified activator.  Pressing again exits.</_long>
+			<default>&lt;super&gt; KEY_E</default>
+		</option>
+		<option name="background" type="color">
+			<_short>Background color</_short>
+			<_long>Sets the background color.</_long>
+			<default>0.0 0.0 0.0 1.0</default>
+		</option>
+		<option name="duration" type="int">
+			<_short>Zoom duration</_short>
+			<_long>Sets the zoom duration in milliseconds.</_long>
+			<default>300</default>
+		</option>
+		<option name="offset" type="double">
+			<_short>Delimiter offset</_short>
+			<_long>Sets the delimiter offset (in pixels) between workspaces.</_long>
+			<default>10.0</default>
+		</option>
 	</plugin>
 </wayfire>

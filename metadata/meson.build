@@ -1,6 +1,6 @@
 install_data('alpha.xml', install_dir: conf_data.get('PLUGIN_XML_DIR'))
-install_data('autostart.xml', install_dir: conf_data.get('PLUGIN_XML_DIR'))
 install_data('animate.xml', install_dir: conf_data.get('PLUGIN_XML_DIR'))
+install_data('autostart.xml', install_dir: conf_data.get('PLUGIN_XML_DIR'))
 install_data('blur.xml', install_dir: conf_data.get('PLUGIN_XML_DIR'))
 install_data('command.xml', install_dir: conf_data.get('PLUGIN_XML_DIR'))
 install_data('core.xml', install_dir: conf_data.get('PLUGIN_XML_DIR'))

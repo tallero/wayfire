@@ -1,67 +1,81 @@
 <?xml version="1.0"?>
 <wayfire>
 	<plugin name="grid">
-	<_short>Grid</_short>
-	<category>Window Management</category>
-	<option name="duration" type="int">
-		<_short>Duration</_short>
-		<default>300</default>
-	</option>
-	<option name="type" type="string">
-		<_short>Type</_short>
-		<default>simple</default>
-		<desc>
-			<value>none</value>
-			<_name>None</_name>
-		</desc>
-		<desc>
-			<value>simple</value>
-			<_name>Simple</_name>
-		</desc>
-		<desc>
-			<value>wobbly</value>
-			<_name>Wobbly</_name>
-		</desc>
-	</option>
-	<option name="slot_bl" type="activator">
-		<_short>Bottom Left</_short>
-		<default>&lt;ctrl&gt; &lt;alt&gt; KEY_KP1</default>
-	</option>
-	<option name="slot_b" type="activator">
-		<_short>Bottom</_short>
-		<default>&lt;ctrl&gt; &lt;alt&gt; KEY_KP2</default>
-	</option>
-	<option name="slot_br" type="activator">
-		<_short>Bottom Right</_short>
-		<default>&lt;ctrl&gt; &lt;alt&gt; KEY_KP3</default>
-	</option>
-	<option name="slot_l" type="activator">
-		<_short>Left</_short>
-		<default>&lt;ctrl&gt; &lt;alt&gt; KEY_KP4</default>
-	</option>
-	<option name="slot_c" type="activator">
-		<_short>Center</_short>
-		<default>&lt;ctrl&gt; &lt;alt&gt; KEY_KP5</default>
-	</option>
-	<option name="slot_r" type="activator">
-		<_short>Right</_short>
-		<default>&lt;ctrl&gt; &lt;alt&gt; KEY_KP6</default>
-	</option>
-	<option name="slot_tl" type="activator">
-		<_short>Top Left</_short>
-		<default>&lt;ctrl&gt; &lt;alt&gt; KEY_KP7</default>
-	</option>
-	<option name="slot_t" type="activator">
-		<_short>Top</_short>
-		<default>&lt;ctrl&gt; &lt;alt&gt; KEY_KP8</default>
-	</option>
-	<option name="slot_tr" type="activator">
-		<_short>Top Right</_short>
-		<default>&lt;ctrl&gt; &lt;alt&gt; KEY_KP9</default>
-	</option>
-	<option name="restore" type="activator">
-		<_short>Restore</_short>
-		<default>&lt;ctrl&gt; &lt;alt&gt; KEY_KP5</default>
-	</option>
+		<_short>Grid</_short>
+		<_long>A plugin to position the windows in certain regions of the output.</_long>
+		<category>Window management</category>
+		<option name="duration" type="int">
+			<_short>Duration</_short>
+			<_long>Sets the duration of the animation in milliseconds.</_long>
+			<default>300</default>
+		</option>
+		<option name="type" type="string">
+			<_short>Type</_short>
+			<_long>Sets the type of the animation.</_long>
+			<default>simple</default>
+			<desc>
+				<value>none</value>
+				<_name>None</_name>
+			</desc>
+			<desc>
+				<value>simple</value>
+				<_name>Simple</_name>
+			</desc>
+			<desc>
+				<value>wobbly</value>
+				<_name>Wobbly</_name>
+			</desc>
+		</option>
+		<!-- Key-bindings -->
+		<option name="slot_bl" type="activator">
+			<_short>Bottom left</_short>
+			<_long>Positions the window in the bottom left corner of the screen with the specified activator.  The window takes 1/4 of the screen.</_long>
+			<default>&lt;alt&gt; &lt;ctrl&gt; KEY_KP1</default>
+		</option>
+		<option name="slot_b" type="activator">
+			<_short>Bottom</_short>
+			<_long>Positions the window in the bottom edge of the screen with the specified activator.  The window takes half of the screen.</_long>
+			<default>&lt;alt&gt; &lt;ctrl&gt; KEY_KP2</default>
+		</option>
+		<option name="slot_br" type="activator">
+			<_short>Bottom right</_short>
+			<_long>Positions the window in the bottom right corner of the screen with the specified activator.  The window takes 1/4 of the screen.</_long>
+			<default>&lt;alt&gt; &lt;ctrl&gt; KEY_KP3</default>
+		</option>
+		<option name="slot_l" type="activator">
+			<_short>Left</_short>
+			<_long>Positions the window in the left edge of the screen with the specified activator.  The window takes half of the screen.</_long>
+			<default>&lt;alt&gt; &lt;ctrl&gt; KEY_KP4</default>
+		</option>
+		<option name="slot_c" type="activator">
+			<_short>Center</_short>
+			<_long>Positions the window in the center of the screen with the specified activator.  The window is maximized.</_long>
+			<default>&lt;alt&gt; &lt;ctrl&gt; KEY_KP5</default>
+		</option>
+		<option name="slot_r" type="activator">
+			<_short>Right</_short>
+			<_long>Positions the window in the right edge of the screen with the specified activator.  The window takes half of the screen.</_long>
+			<default>&lt;alt&gt; &lt;ctrl&gt; KEY_KP6</default>
+		</option>
+		<option name="slot_tl" type="activator">
+			<_short>Top left</_short>
+			<_long>Positions the window in the top left corner of the screen with the specified activator.  The window takes 1/4 of the screen.</_long>
+			<default>&lt;alt&gt; &lt;ctrl&gt; KEY_KP7</default>
+		</option>
+		<option name="slot_t" type="activator">
+			<_short>Top</_short>
+			<_long>Positions the window in the top edge of the screen with the specified activator.  The window takes half of the screen.</_long>
+			<default>&lt;alt&gt; &lt;ctrl&gt; KEY_KP8</default>
+		</option>
+		<option name="slot_tr" type="activator">
+			<_short>Top right</_short>
+			<_long>Positions the window in the top right corner of the screen with the specified activator.  The window takes 1/4 of the screen.</_long>
+			<default>&lt;alt&gt; &lt;ctrl&gt; KEY_KP9</default>
+		</option>
+		<option name="restore" type="activator">
+			<_short>Restore</_short>
+			<_long>Restores the window to its original size and position with the specified activator.</_long>
+			<default>&lt;alt&gt; &lt;ctrl&gt; KEY_KP0</default>
+		</option>
 	</plugin>
 </wayfire>

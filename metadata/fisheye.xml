@@ -1,23 +1,27 @@
 <?xml version="1.0"?>
 <wayfire>
 	<plugin name="fisheye">
-	<_short>Fisheye</_short>
-	<category>Effects</category>
-	<option name="toggle" type="activator">
-		<_short>Toggle</_short>
-		<default>&lt;super&gt; KEY_F</default>
-	</option>
-	<option name="radius" type="double">
-		<_short>Radius</_short>
-		<min>1</min>
-		<default>300</default>
-	</option>
-	<option name="zoom" type="double">
-		<_short>Zoom</_short>
-		<min>1.0</min>
-		<max>20.0</max>
-		<precision>0.01</precision>
-		<default>7.0</default>
-	</option>
+		<_short>Fisheye</_short>
+		<_long>A plugin which provides fisheye effect.</_long>
+		<category>Effects</category>
+		<option name="toggle" type="activator">
+			<_short>Toggle</_short>
+			<_long>Toggles fisheye with the specified key.</_long>
+			<default>&lt;super&gt; KEY_F</default>
+		</option>
+		<option name="radius" type="double">
+			<_short>Radius</_short>
+			<_long>Sets the border radius in pixels.</_long>
+			<default>300.0</default>
+			<min>1.0</min>
+		</option>
+		<option name="zoom" type="double">
+			<_short>Zoom</_short>
+			<_long>Sets the zoom factor.</_long>
+			<default>7.0</default>
+			<min>1.0</min>
+			<max>20.0</max>
+			<precision>0.01</precision>
+		</option>
 	</plugin>
 </wayfire>

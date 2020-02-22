@@ -1,11 +1,25 @@
 <?xml version="1.0"?>
 <wayfire>
 	<plugin name="workarounds">
-	<_short>Workarounds</_short>
-	<category>Utility</category>
-	<option name="app_id_mode" type="string">
-		<_short>App ID Mode</_short>
-		<default>stock</default>
-	</option>
+		<_short>Workarounds</_short>
+		<_long>Some hacks that might be required to make things work.</_long>
+		<category>Utility</category>
+		<option name="app_id_mode" type="string">
+			<_short>Application ID mode</_short>
+			<_long>Specifies the application ID mode.</_long>
+			<default>stock</default>
+			<desc>
+				<value>stock</value>
+				<_name>Stock</_name>
+			</desc>
+			<desc>
+				<value>gtk-shell</value>
+				<_name>GTK Shell</_name>
+			</desc>
+			<desc>
+				<value>full</value>
+				<_name>Full</_name>
+			</desc>
+		</option>
 	</plugin>
 </wayfire>

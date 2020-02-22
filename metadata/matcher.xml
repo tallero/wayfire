@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <wayfire>
 	<plugin name="matcher">
-	<_short>Matcher</_short>
-	<category>Window Management</category>
+		<_short>Matcher</_short>
+		<_long>A plugin to match windows, by using various criteria.</_long>
+		<category>Window management</category>
 	</plugin>
 </wayfire>
