@@ -31,23 +31,53 @@ extern "C"
 
 wf_runtime_config runtime_config;
 
-#define INOT_BUF_SIZE (1024 * sizeof(inotify_event))
+#define EVENT_SIZE  (sizeof(inotify_event))
+#define INOT_BUF_SIZE (1024 * EVENT_SIZE)
 char buf[INOT_BUF_SIZE];
 
-static std::string config_file;
+static std::string config_dir, config_file;
+static std::string config_filename = "wayfire.ini";
+
 static void reload_config(int fd)
 {
     wf::config::load_configuration_options_from_file(
         wf::get_core().config, config_file);
+    inotify_add_watch(fd, config_dir.c_str(), IN_CREATE);
     inotify_add_watch(fd, config_file.c_str(), IN_MODIFY);
 }
 
 static int handle_config_updated(int fd, uint32_t mask, void *data)
 {
-    LOGD("Reloading configuration file");
+    int length, i = 0;
 
-    /* read, but don't use */
-    read(fd, buf, INOT_BUF_SIZE);
+    length = read(fd, buf, INOT_BUF_SIZE);
+
+    if (!length)
+    {
+        LOGE("Error reading inotify event");
+        return 0;
+    }
+
+    while (i < length)
+    {
+        inotify_event *event = (inotify_event *) &buf[i];
+        if (event->len)
+        {
+            if (!(event->mask & IN_CREATE) && !(event->mask & IN_MODIFY))
+            {
+                 return 0;
+            }
+            if ((event->mask & IN_CREATE) &&
+                std::string(event->name) != config_filename)
+            {
+                 return 0;
+            }
+        }
+
+        i += EVENT_SIZE + event->len;
+    }
+
+    LOGD("Reloading configuration file");
     reload_config(fd);
 
     wf::get_core().emit_signal("reload-config", nullptr);
@@ -208,10 +238,10 @@ static void signal_handler(int signal)
 
 int main(int argc, char *argv[])
 {
-    std::string config_dir = nonull(getenv("XDG_CONFIG_HOME"));
+    config_dir = nonull(getenv("XDG_CONFIG_HOME"));
     if (!config_dir.compare("nil"))
         config_dir = std::string(nonull(getenv("HOME"))) + "/.config/";
-    config_file = config_dir + "wayfire.ini";
+    config_file = config_dir + config_filename;
 
     wf::log::log_level_t log_level = wf::log::LOG_LEVEL_INFO;
     struct option opts[] = {
