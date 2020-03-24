@@ -4,8 +4,11 @@
 #include <wayfire/opengl.hpp>
 
 /**
- * Upload the data from the surface to the OpenGL texture.
- * If @tex is -1, a new texture will be generated.
+ * Upload the data from the cairo surface to the OpenGL texture.
+ *
+ * @param surface The source cairo surface.
+ * @param tex     The texture to upload data to. If tex is -1, a new texture
+ *                  will be allocated.
  */
 static void cairo_surface_upload_to_texture(
     cairo_surface_t *surface, GLuint& tex)

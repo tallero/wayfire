@@ -14,7 +14,7 @@
 #include "deco-subsurface.hpp"
 #include "deco-layout.hpp"
 #include "deco-theme.hpp"
-#include "cairo-util.hpp"
+#include "../common/cairo-util.hpp"
 
 #include <cairo.h>
 

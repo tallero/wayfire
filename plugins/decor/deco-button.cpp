@@ -1,7 +1,8 @@
 #include "deco-button.hpp"
 #include "deco-theme.hpp"
 #include <wayfire/opengl.hpp>
-#include <cairo-util.hpp>
+
+#include "../common/cairo-util.hpp"
 
 #define HOVERED  1.0
 #define NORMAL   0.0
