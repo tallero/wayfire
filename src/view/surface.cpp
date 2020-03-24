@@ -370,21 +370,16 @@ void wf::wlr_surface_base_t::_simple_render(const wf::framebuffer_t& fb,
     if (!get_buffer())
         return;
 
-    float rx = x + fb.geometry.x;
-    float ry = y + fb.geometry.y;
-    gl_geometry geometry {
-        rx, ry,
-        rx + surface->current.width, ry + surface->current.height,
-    };
+    auto size = this->_get_size();
+    wf::geometry_t geometry = { x, y, size.width, size.height };
     wf::texture_t texture{surface->buffer->texture};
-    auto matrix = fb.get_orthographic_projection();
 
     OpenGL::render_begin(fb);
     for (const auto& rect : damage)
     {
         auto box = wlr_box_from_pixman_box(rect);
         fb.scissor(fb.framebuffer_box_from_damage_box(box));
-        OpenGL::render_transformed_texture(texture, geometry, {}, matrix);
+        OpenGL::render_texture(texture, fb, geometry);
     }
     OpenGL::render_end();
 }

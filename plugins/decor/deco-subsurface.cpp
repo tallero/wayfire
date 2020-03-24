@@ -114,7 +114,8 @@ class simple_decoration_surface : public wf::surface_interface_t,
         wf::geometry_t geometry)
     {
         update_title(geometry.width, geometry.height, fb.scale);
-        render_gl_texture(fb, geometry, title_texture.tex);
+        OpenGL::render_texture(title_texture.tex, fb, geometry, glm::vec4(1.0f),
+            OpenGL::TEXTURE_TRANSFORM_INVERT_Y);
     }
 
     void render_scissor_box(const wf::framebuffer_t& fb, wf::point_t origin,

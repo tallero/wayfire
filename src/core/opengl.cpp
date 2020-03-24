@@ -184,7 +184,7 @@ namespace OpenGL
         render_transformed_texture(texture, gg, {}, transform, color, bits);
     }
 
-    void render_transformed_texture(wf::texture_t texture,
+    void render_texture(wf::texture_t texture,
         const wf::framebuffer_t& framebuffer,
         const wf::geometry_t& geometry, glm::vec4 color, uint32_t bits)
     {
