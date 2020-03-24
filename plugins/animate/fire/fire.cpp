@@ -105,7 +105,7 @@ class FireTransformer : public wf::view_transformer_t
 
         OpenGL::render_transformed_texture(src_tex, src_geometry, tex_geometry,
             target_fb.get_orthographic_projection(), glm::vec4(1.0),
-            TEXTURE_USE_TEX_GEOMETRY);
+            OpenGL::TEXTURE_USE_TEX_GEOMETRY);
 
         auto translate =
             glm::translate(glm::mat4(1.0), {src_box.x, src_box.y, 0});

@@ -75,7 +75,7 @@ void button_t::render(const wf::framebuffer_t& fb, wf::geometry_t geometry,
 
     OpenGL::render_transformed_texture(button_texture, gg, {},
         fb.get_orthographic_projection(), {1, 1, 1, 1},
-        TEXTURE_TRANSFORM_INVERT_Y);
+        OpenGL::TEXTURE_TRANSFORM_INVERT_Y);
 
     OpenGL::render_end();
 

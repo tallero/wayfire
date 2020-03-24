@@ -41,5 +41,5 @@ static void render_gl_texture(const wf::framebuffer_t& fb,
 
     OpenGL::render_transformed_texture(texture, gg, {},
         fb.get_orthographic_projection(), {1, 1, 1, 1},
-        TEXTURE_TRANSFORM_INVERT_Y);
+        OpenGL::TEXTURE_TRANSFORM_INVERT_Y);
 }

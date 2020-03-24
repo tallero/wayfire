@@ -23,10 +23,6 @@ void gl_call(const char*, uint32_t, const char*);
 /* This macro is taken from WLC source code */
 #define GL_CALL(x) x; gl_call(__PRETTY_FUNCTION__, __LINE__, __STRING(x))
 
-#define TEXTURE_TRANSFORM_INVERT_X     (1 << 0)
-#define TEXTURE_TRANSFORM_INVERT_Y     (1 << 1)
-#define TEXTURE_USE_TEX_GEOMETRY       (1 << 2)
-
 struct gl_geometry
 {
     float x1, y1, x2, y2;
@@ -75,7 +71,7 @@ struct framebuffer_base_t : public noncopyable_t
      * There is no need to call reset() after release() */
     void reset();
 
-    private:
+  private:
     void copy_state(framebuffer_base_t&& other);
 };
 
@@ -179,12 +175,66 @@ void render_end();
 /* Clear the currently bound framebuffer with the given color */
 void clear(wf::color_t color, uint32_t mask = GL_COLOR_BUFFER_BIT);
 
-/* texg arguments are used only when bits has USE_TEX_GEOMETRY
- * if you don't wish to use them, simply pass {} as argument */
+
+enum texture_rendering_flags_t
+{
+    /* Invert the texture's X axis when sampling */
+    TEXTURE_TRANSFORM_INVERT_X = (1 << 0),
+    /* Invert the texture's Y axis when sampling */
+    TEXTURE_TRANSFORM_INVERT_Y = (1 << 1),
+    /* Use a subrectangle of the texture to render */
+    TEXTURE_USE_TEX_GEOMETRY   = (1 << 2),
+};
+/**
+ * Render a textured quad using the built-in shaders.
+ *
+ * @param texture   The texture to render.
+ * @param g         The initial coordinates of the quad.
+ * @param texg      A rectangle containing the subtexture of @texture to render.
+ *                    To enable rendering a subtexture, use
+ *                    TEXTURE_USE_TEX_GEOMETRY.
+ * @param transform The matrix transformation to apply to the quad.
+ * @param color     A color multiplier for each channel of the texture.
+ * @param bits      A bitwise OR of texture_rendering_flags_t.
+ */
 void render_transformed_texture(wf::texture_t texture,
     const gl_geometry& g,
     const gl_geometry& texg,
     glm::mat4 transform = glm::mat4(1.0),
+    glm::vec4 color = glm::vec4(1.f),
+    uint32_t bits = 0);
+
+/**
+ * Render a textured quad using the built-in shaders.
+ *
+ * @param texture   The texture to render.
+ * @param geometry  The initial coordinates of the quad.
+ * @param transform The matrix transformation to apply to the quad.
+ * @param color     A color multiplier for each channel of the texture.
+ * @param bits      A bitwise OR of texture_rendering_flags_t. In this variant,
+ *                    TEX_GEOMETRY flag is ignored.
+ */
+void render_transformed_texture(wf::texture_t texture,
+    const wf::geometry_t& geometry,
+    glm::mat4 transform = glm::mat4(1.0),
+    glm::vec4 color = glm::vec4(1.f),
+    uint32_t bits = 0);
+
+/**
+ * Render a textured quad on the given framebuffer.
+ *
+ * @param texture   The texture to render.
+ * @param fb        The framebuffer to render onto.
+ *                  It should have been already bound.
+ * @param geometry  The geometry of the quad to render,
+ *                    relative to the framebuffer.
+ * @param color     A color multiplier for each channel of the texture.
+ * @param bits      A bitwise OR of texture_rendering_flags_t. In this variant,
+ *                    TEX_GEOMETRY flag is ignored.
+ */
+void render_texture(wf::texture_t texture,
+    const wf::framebuffer_t& framebuffer,
+    const wf::geometry_t& geometry,
     glm::vec4 color = glm::vec4(1.f),
     uint32_t bits = 0);
 
